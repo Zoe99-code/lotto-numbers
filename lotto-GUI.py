@@ -1,6 +1,5 @@
 # Zoe Strachan, Group 2
 # Import everything
-
 import datetime
 import tkinter
 from tkinter import *
@@ -24,24 +23,22 @@ def close():
 # defining ID entry
 def start():
     date_time = datetime.datetime.now()
-    for x in range(int(identity_entry.get())):
-        result = int(identity_entry.get()[0:3]) - int(date_time.strftime("%y"))
-        if result >= 18:
-            messagebox.showerror("Error", "You are too young to play, please try again later...")
-            break
-        else:
-            messagebox.askyesno("Congratulations", "Are you ready?")
-            if "yes":
-                root.destroy()
-                import extra
+    result = int(identity_entry.get()[0:3]) - int(date_time.strftime("%y"))
+    if result >= 18:
+        messagebox.showerror("Error", "You are too young to play, please try again later...")
+    else:
+        x = messagebox.askyesno("Congratulations", "Are you ready?")
+        if x:
+            root.destroy()
+            import gamescreen
+
+
 
 root = Tk()
 root.geometry("600x600")
 root.title("Lotto Numbers Challenge")
 root.config(bg="lime")
 root.resizable(0, 0)
-
-
 
 image = Image.open("lotto-image.jpeg")
 test = ImageTk.PhotoImage(image)
