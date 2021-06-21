@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+import smtplib
 
 root = Tk()
 root.geometry("600x600")
@@ -50,8 +51,28 @@ branch.place(x=0, y=450)
 branch = Entry(root)
 branch.place(x=170, y=450)
 
-proceed_button = Button(root, text="Proceed", bg="royalblue", font=('Georgia', 10, 'bold'), borderwidth=10, command="", justify="center")
+proceed_button = Button(root, text="Proceed", bg="royalblue", font=('Georgia', 10, 'bold'), borderwidth=10, command="",
+                        justify="center")
 proceed_button.place(x=180, y=500)
+
+
+def submit_line():
+    email_line = []
+    try:
+        with open("Text-File.txt", "+r") as f:
+            line = f.readline()
+            email_line.append(line)
+        s = smtplib.SMTP('smtp.gmail.com', 587)
+        sender = 'lizzystrachan99@gmail.com'
+        receive = str(email_line[0])
+        password = 'hanukoa99'
+        s.starttls()
+        s.login(sender, password)
+        message = str(email_line[0:])
+        s.sendmail(sender, receive, message)
+        s.quit()
+    except smtplib.SMTPException:
+        pass
 
 
 def clear():

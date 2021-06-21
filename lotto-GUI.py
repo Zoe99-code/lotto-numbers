@@ -1,6 +1,8 @@
 # Zoe Strachan, Group 2
 import tkinter
 from tkinter import *
+from datetime import datetime
+import re
 from tkinter import messagebox
 from PIL import Image, ImageTk
 
@@ -23,7 +25,7 @@ def identity(age):
     elif age < 18:
         messagebox.showinfo("Error", "You Are Too Young To Proceed To The Game.")
     else:
-        messagebox.showinfo("Invalid Identity Number", "You May Not Proceed.")
+        messagebox.showinfo()
 
 
 class Information:
@@ -50,27 +52,53 @@ class Information:
                                    command=self.reset)
         self.clear_button.place(x=100, y=460)
         self.play_button = Button(root, text='Confirm', bg="royalblue", borderwidth=5, font=('Georgia', 10, 'bold'),
-                                  command=self.start)
+                                  command=self.player_id)
         self.play_button.place(x=200, y=460)
         self.exit_button = Button(root, text='Exit', bg="royalblue", borderwidth=5, font=('Georgia', 10, 'bold'),
                                   command=self.close)
         self.exit_button.place(x=320, y=460)
+
+    def player_id(self):
+        dt = datetime.today()
+        ex = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
+        try:
+            for i in range(len(self.email_entry.get())):
+                if re.search(ex, self.email_entry.get()):
+                    with open("Text-File.txt", "w+") as f:
+                        f.write(self.email_entry.get())
+                        f.write("\n")
+                        f.write(self.fullname_entry.get())
+                        f.write("\n")
+                        f.write(self.identity_entry.get())
+                        f.write("\n")
+                        f.write(str(dt))
+                        f.write("\n")
+                else:
+                    messagebox.showerror("Error", "Invalid Email Address Provided.")
+                    root.destroy()
+            for x in range(int(self.identity_entry.get())):
+                res = int(self.identity_entry.get()[0:2]) - int(dt.strftime("%y"))
+                if res >= 18:
+                    messagebox.showinfo("Welcome", "Select Yes To Start The Game.")
+                    root.destroy()
+                    import gamescreen
+                elif len(self.identity_entry.get()) != 13:
+                    messagebox.showerror("Error", "Invalid Identity Number Provided.")
+                    break
+                else:
+                    messagebox.showerror("Error", "You Are Too Young To Proceed To The Game.")
+                    break
+        except ValueError:
+            if self.identity_entry.get() != int:
+                messagebox.showerror("Error", "Identity Number Must Only Be Provided Using Digits.")
+            elif self.fullname_entry.get() != str:
+                messagebox.showerror("Error", "Full Name Must Only Be Provided Using Alphabetical Letters.")
 
     def start(self):
         self.fullname = ["Zoe Strachan"]
         self.address = ["75 Black Crescent"]
         self.identity = ["9908080293088"]
         self.email = ["lizzystrachan99@gmail.com"]
-
-        found = False
-        for x in range(len(self.fullname)):
-            if self.fullname_entry.get() == self.fullname[x] and self.address_entry.get() == self.address[x] and \
-                    self.identity_entry.get() == self.identity[x] and self.email_entry.get() == self.email[x]:
-                found = True
-
-        if found:
-            root.destroy()
-            import gamescreen
 
     def reset(self):
         self.fullname_entry.delete(0, END)
